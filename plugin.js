@@ -127,7 +127,17 @@ exports.for = function (API) {
 										if (resolvedConfig.onExists.md === "skip") {
 											return callback(null, data);
 										} else {
-											throw new Error("'onExists.json' value of '" + resolvedConfig.onExists.json + "' not supported!");
+											throw new Error("'onExists.md' value of '" + resolvedConfig.onExists.md + "' not supported!");
+										}
+									});
+								} else
+								if (/\.js$/.test(file.relative)) {
+									return API.FS.readFile(API.PATH.join(toPath, file.relative), "utf8", function (err, data) {
+										if (err) return callback(err);
+										if (resolvedConfig.onExists.js === "skip") {
+											return callback(null, data);
+										} else {
+											throw new Error("'onExists.js' value of '" + resolvedConfig.onExists.js + "' not supported!");
 										}
 									});
 								} else
@@ -145,7 +155,7 @@ console.log("REPLACE", new RegExp(new API.ESCAPE_REGEXP_COMPONENT(resolvedConfig
 										return callback(null, newData);
 									});
 								}
-								var err = new Error("Implement instruction parsing for file extension: " + file.relative);
+								var err = new Error("Implement instruction parsing for file: " + file.relative);
 								console.error(err.stack);
 								return callback(err);
 							});
