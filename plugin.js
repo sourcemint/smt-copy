@@ -147,11 +147,15 @@ exports.for = function (API) {
 								) {
 									return API.FS.readFile(API.PATH.join(toPath, file.relative), "utf8", function (err, data) {
 										if (err) return callback(err);
-
-console.log("REPLACE", new RegExp(new API.ESCAPE_REGEXP_COMPONENT(resolvedConfig.onExists[ext].anchor), "g"));
-
-										newData = newData.replace(new RegExp(new API.ESCAPE_REGEXP_COMPONENT(resolvedConfig.onExists[ext].anchor), "g"), data);
-
+										// Check if we have already wrapped it by comparing the first 3 lines of the file.
+										if (
+											data.split("\n").slice(0, 3).join("\n") === newData.split("\n").slice(0, 3).join("\n")
+										) {
+											// Already wrapped.
+											newData = data;
+										} else {
+											newData = newData.replace(new RegExp(API.ESCAPE_REGEXP_COMPONENT(resolvedConfig.onExists[ext].anchor), "g"), data);
+										}
 										return callback(null, newData);
 									});
 								}
