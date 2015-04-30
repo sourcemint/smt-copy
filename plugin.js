@@ -49,10 +49,16 @@ exports.for = function (API) {
 					var lastPath = null;
 					stream
 						.pipe(API.GULP_PLUMBER())
-						.pipe(API.GULP_DEBUG({
-							title: '[smt-copy]',
-							minimal: true
-						}))
+
+					if (API.VERBOSE) {
+						stream = stream
+							.pipe(API.GULP_DEBUG({
+								title: '[smt-copy]',
+								minimal: true
+							}))
+					}
+
+					stream = stream
 						.pipe(API.GULP_RENAME(function (path) {
 							var m = null;
 							if (
