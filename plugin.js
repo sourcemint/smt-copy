@@ -105,13 +105,19 @@ exports.for = function (API) {
 							.pipe(GULP_EDIT(function(newData, callback) {
 								var file = this;
 								return API.FS.exists(API.PATH.join(toPath, file.relative), function (exists) {
+									var ext = file.relative.split(".").pop();
 									if (!exists) {
+										if (
+											typeof resolvedConfig.onExists[ext] === "object" &&
+											resolvedConfig.onExists[ext].action === "wrap"
+										) {
+											newData = newData.replace(new RegExp(API.ESCAPE_REGEXP_COMPONENT(resolvedConfig.onExists[ext].anchor), "g"), "");
+										}
 										return callback(null, newData);
 									}
 									if (!resolvedConfig.onExists) {
 										return callback(null, newData);
 									}
-									var ext = file.relative.split(".").pop();
 									if (!resolvedConfig.onExists[ext]) {
 										return callback(null, newData);
 									}
@@ -157,7 +163,7 @@ exports.for = function (API) {
 										});
 									} else
 									if (
-										typeof resolvedConfig.onExists[ext] === "object",
+										typeof resolvedConfig.onExists[ext] === "object" &&
 										resolvedConfig.onExists[ext].action === "wrap"
 									) {
 										return API.FS.readFile(API.PATH.join(toPath, file.relative), "utf8", function (err, data) {
