@@ -130,6 +130,7 @@ exports.for = function (API) {
 											if (resolvedConfig.onExists.json === "merge") {
 												try {
 													// What is already existing is more important than what is new.
+													// TODO: Insert WITHOUT changing file structure!
 													newData = JSON.stringify(API.DEEPMERGE(JSON.parse(newData), JSON.parse(data)), null, 4);
 												} catch (err) {
 													err.message += " (while parsing JSON for '" + file.relative + "')";
